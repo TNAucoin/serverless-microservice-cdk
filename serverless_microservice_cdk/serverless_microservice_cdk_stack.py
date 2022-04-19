@@ -4,11 +4,20 @@ from aws_cdk import (
     # aws_sqs as sqs,
 )
 from constructs import Construct
+from .services import Services
+from .apigateway import ApiGateway
+
 
 class ServerlessMicroserviceCdkStack(Stack):
 
     def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
+        services = Services(self, 'Services')
+        apigateway = ApiGateway(
+            self,
+            'Apis',
+            cart_handler=services.cart_function
+        )
 
         # The code that defines your stack goes here
 
