@@ -1,5 +1,5 @@
 from aws_cdk import (
-    aws_lambda as _lambda
+    aws_lambda as _lambda,
 )
 from constructs import Construct
 from aws_cdk.aws_apigateway import LambdaRestApi
@@ -20,7 +20,7 @@ class ApiGateway(Construct):
             'cart_apigw',
             rest_api_name="Cart Service",
             handler=lambda_handler,
-            proxy=False
+            proxy=True
         )
 
         cart = apigw.root.add_resource('cart')

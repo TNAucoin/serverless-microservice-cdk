@@ -1,24 +1,24 @@
-import aws_cdk.aws_lambda
+from aws_cdk.aws_lambda import Runtime
 from constructs import Construct
 from aws_cdk import (
-    aws_lambda as _lambda
+    aws_lambda_python_alpha as lambda_
 )
 
 
 class Services(Construct):
     @property
-    def cart_function(self) -> _lambda.Function:
+    def cart_function(self) -> lambda_.PythonFunction:
         return self._cart_function
 
     def __init__(self, scope: Construct, id: str, **kwargs):
         super().__init__(scope, id, **kwargs)
         self._cart_function = self.create_cart_function()
 
-    def create_cart_function(self) -> _lambda.Function:
-        lambda_function = _lambda.Function(
+    def create_cart_function(self) -> lambda_.PythonFunction:
+        lambda_function = lambda_.PythonFunction(
             self, 'CartServiceLambda',
-            runtime=_lambda.Runtime.PYTHON_3_9,
-            handler='cart_handler.handler',
-            code=_lambda.Code.from_asset('src/cart/lambda')
+            runtime=Runtime.PYTHON_3_8,
+            entry='./src/cart/lambda/',
+            handler='index.handler',
         )
         return lambda_function
