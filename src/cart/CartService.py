@@ -7,20 +7,15 @@ from aws_cdk import (
 
 class CartService(Construct):
     @property
-    def handler(self):
+    def handler(self) -> _lambda.PythonFunction:
         return self._handler
 
-    def __init__(self, scope: Construct, id: str, downstream: _lambda.IFunction, **kwargs):
+    def __init__(self, scope: Construct, id: str, **kwargs):
         super().__init__(scope, id, **kwargs)
-
         self._handler = _lambda.PythonFunction(
             self, 'CartServiceLambda',
             runtime=Runtime.PYTHON_3_8,
-            entry='./lambda',
-            handler='index.handler',
-            layers=[
-                _lambda.PythonLayerVersion(self, "MyLayer",
-                                           entry="./lambda"
-                                           )
-            ]
+            entry='./src/cart/lambda/',
+            handler='handler',
         )
+

@@ -16,7 +16,7 @@ class ServerlessMicroserviceCdkStack(Stack):
         apigateway = ApiGateway(
             self,
             'Apis',
-            cart_handler=services.cart_function
+            cart_handler=services.cart_service.handler
         )
 
         # The code that defines your stack goes here
