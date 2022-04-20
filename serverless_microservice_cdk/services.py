@@ -13,6 +13,6 @@ class Services(Construct):
     def cart_service(self) -> CartService:
         return self._cart_service
 
-    def __init__(self, scope: Construct, id: str,  **kwargs):
+    def __init__(self, scope: Construct, id: str, cart_table: ddb.ITable,  **kwargs):
         super().__init__(scope, id, **kwargs)
-        self._cart_service = CartService(self, 'CartService')
+        self._cart_service = CartService(self, 'CartService', cart_table=cart_table)
