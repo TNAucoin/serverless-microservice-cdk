@@ -19,6 +19,13 @@ cart_table = dynamodb.Table(os.getenv('CART_TABLE_NAME'))
 router = APIRouter()
 
 
+class DecimalEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Decimal):
+            return str(obj)
+        return json.JSONEncoder.default(self, obj)
+
+
 # create post body models
 
 class CartProducts(BaseModel):
@@ -67,7 +74,6 @@ async def delete_cart_by_username_endpoint(user_name: str):
 def get_all_carts():
     response = cart_table.scan()
     data = response['Items']
-    logger.info(json.dumps(response))
     while 'LastEvaluatedKey' in response:
         response = cart_table.scan(ExclusiveStartKey=response['LastEvaluatedKey'])
         data.extend(response['Items'])
@@ -77,7 +83,7 @@ def get_all_carts():
 def get_cart_by_username(user_name: str):
     response = cart_table.get_item(Key={"user_name": user_name})
     logger.info('##Get_By_Username##')
-    logger.info(json.dumps(response))
+    logger.info(response)
     if 'Item' in response:
         return response['Item']
     else:
@@ -102,3 +108,6 @@ def delete_cart(user_name: str):
         Key=({"user_name": user_name})
     )
     return response
+
+
+router.include_router(router, prefix='/cart', tags=['Cart'])
