@@ -15,12 +15,12 @@ logger.setLevel(logging.INFO)
 # Setup ddb client on our service table
 dynamodb = boto3.resource('dynamodb')
 cart_table = dynamodb.Table(os.getenv('CART_TABLE_NAME'))
-
 # declare router
 router = APIRouter()
 
 
 # create post body models
+
 class CartProducts(BaseModel):
     name: str
     description: str
@@ -43,7 +43,7 @@ async def get_cart_by_username_endpoint(user_name: str):
 # get all carts
 @router.get('/')
 async def get_all_carts_endpoint():
-    return {"message": "all carts"}
+    return get_all_carts()
 
 
 # create a new cart
@@ -61,7 +61,17 @@ async def checkout_cart_endpoint():
 # remove a cart by {user_name}
 @router.delete('/{user_name}')
 async def delete_cart_by_username_endpoint(user_name: str):
-    return {"message": f"{user_name} deleted"}
+    return delete_cart(user_name)
+
+
+def get_all_carts():
+    response = cart_table.scan()
+    data = response['Items']
+    logger.info(json.dumps(response))
+    while 'LastEvaluatedKey' in response:
+        response = cart_table.scan(ExclusiveStartKey=response['LastEvaluatedKey'])
+        data.extend(response['Items'])
+    return data
 
 
 def get_cart_by_username(user_name: str):
@@ -87,5 +97,8 @@ def checkout_cart():
     pass
 
 
-def delete_cart():
-    pass
+def delete_cart(user_name: str):
+    response = cart_table.delete_item(
+        Key=({"user_name": user_name})
+    )
+    return response
