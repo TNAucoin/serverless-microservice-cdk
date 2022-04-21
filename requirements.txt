@@ -3,3 +3,8 @@ constructs>=10.0.0,<11.0.0
 
 fastapi~=0.75.2
 mangum~=0.14.1
+boto3~=1.21.43
+pydantic~=1.9.0
+anyio~=3.5.0
+sniffio~=1.2.0
+starlette~=0.17.1
