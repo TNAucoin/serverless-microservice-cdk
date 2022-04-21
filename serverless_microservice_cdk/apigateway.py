@@ -1,8 +1,8 @@
 from aws_cdk import (
     aws_lambda as _lambda,
 )
-from constructs import Construct
 from aws_cdk.aws_apigateway import LambdaRestApi
+from constructs import Construct
 
 
 class ApiGateway(Construct):
@@ -10,9 +10,15 @@ class ApiGateway(Construct):
     def cart_api(self):
         return self._cart_api
 
-    def __init__(self, scope: Construct, construct_id: str, cart_handler: _lambda.IFunction, **kwargs) -> None:
+    @property
+    def product_api(self):
+        return self._product_api
+
+    def __init__(self, scope: Construct, construct_id: str, cart_handler: _lambda.IFunction,
+                 product_handler: _lambda.IFunction, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
         self._cart_api = self.create_cart_api(cart_handler)
+        self._product_api = self.create_product_api(product_handler)
 
     def create_cart_api(self, lambda_handler: _lambda.IFunction):
         apigw = LambdaRestApi(
@@ -27,6 +33,16 @@ class ApiGateway(Construct):
         cart.add_method('GET')
         return cart
 
-    # def create_product_api(self):
+    def create_product_api(self, lambda_handler: _lambda.IFunction):
+        apigw = LambdaRestApi(
+            self,
+            'product_apigw',
+            rest_api_name="Product Service",
+            handler=lambda_handler,
+            proxy=True
+        )
+        product = apigw.root.add_resource('product')
+        product.add_method('GET')
+        return product
 
     # def create_order_api(self):

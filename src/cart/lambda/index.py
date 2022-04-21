@@ -9,7 +9,7 @@ app = FastAPI()
 
 @app.get('/')
 def root():
-    return {"message": "hello fastapi"}
+    return {"message": "cart api"}
 
 
 app.include_router(cart_api_router, prefix='/api/v1')

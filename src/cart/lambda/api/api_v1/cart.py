@@ -16,14 +16,7 @@ logger.setLevel(logging.INFO)
 dynamodb = boto3.resource('dynamodb')
 cart_table = dynamodb.Table(os.getenv('CART_TABLE_NAME'))
 # declare router
-router = APIRouter()
-
-
-class DecimalEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, Decimal):
-            return str(obj)
-        return json.JSONEncoder.default(self, obj)
+router = APIRouter(prefix='/cart', tags=['Cart'])
 
 
 # create post body models
@@ -108,6 +101,3 @@ def delete_cart(user_name: str):
         Key=({"user_name": user_name})
     )
     return response
-
-
-router.include_router(router, prefix='/cart', tags=['Cart'])
