@@ -26,28 +26,39 @@ class Product(BaseModel):
 
 
 ## Routes ##
-@router.get('/{product_id}')
-async def get_products_by_id_endpoint(product_id: str):
-    return get_products_by_id(product_id)
 
-
-@router.get('/')
-async def get_all_products_endpoint():
-    return get_all_products()
-
-
+# Get products by product_category query param on /products
 @router.get('')
 async def get_products_by_category_endpoint(product_category: str):
     return get_products_by_category(product_category)
 
 
+# Get product by product_id on products/
+@router.get('/{product_id}')
+async def get_products_by_id_endpoint(product_id: str):
+    return get_products_by_id(product_id)
+
+
+# Get all products
+@router.get('/')
+async def get_all_products_endpoint():
+    return get_all_products()
+
+
+# Create a product
 @router.post('/')
 async def create_product_endpoint(product: Product):
     return create_product(product)
 
 
+# Delete a product by product_id
 @router.delete('/{product_id}')
 async def delete_product_endpoint(product_id: str):
+    pass
+
+
+@router.put('/')
+async def update_product_endpoint(product: Product):
     pass
 
 
@@ -101,3 +112,7 @@ def delete_product(product_id: str):
         Key=({"product_id": product_id})
     )
     return response
+
+
+def update_product(product: Product):
+    pass
