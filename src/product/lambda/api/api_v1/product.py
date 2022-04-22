@@ -4,6 +4,7 @@ import uuid
 from decimal import Decimal
 
 import boto3
+from boto3.dynamodb.conditions import Key
 from fastapi import APIRouter
 from pydantic import BaseModel
 
@@ -35,9 +36,9 @@ async def get_all_products_endpoint():
     return get_all_products()
 
 
-@router.get('/')
+@router.get('')
 async def get_products_by_category_endpoint(product_category: str):
-    pass
+    return get_products_by_category(product_category)
 
 
 @router.post('/')
@@ -64,7 +65,15 @@ def get_products_by_id(product_id: str):
 
 
 def get_products_by_category(product_category: str):
-    pass
+    response = product_table.query(
+        IndexName='Category',
+        KeyConditionExpression=Key('category').eq(product_category)
+    )
+    data = []
+    if 'Items' in response:
+        for item in response['Items']:
+            data.append(item)
+    return data
 
 
 def get_all_products():

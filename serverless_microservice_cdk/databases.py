@@ -41,4 +41,9 @@ class Databases(Construct):
             removal_policy=RemovalPolicy.DESTROY,
             billing_mode=ddb.BillingMode.PAY_PER_REQUEST
         )
+        # GSI for getting products by category
+        table.add_global_secondary_index(
+            index_name="Category",
+            partition_key=ddb.Attribute(name='category', type=ddb.AttributeType.STRING)
+        )
         return table
