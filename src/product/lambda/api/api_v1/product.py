@@ -25,21 +25,25 @@ class Product(BaseModel):
     price: Decimal
 
 
+class UpdateProduct(Product):
+    product_id: str
+
+
 ## Routes ##
 
-# Get products by product_category query param on /products
+# Get products by product_category query param on /product
 @router.get('')
 async def get_products_by_category_endpoint(product_category: str):
     return get_products_by_category(product_category)
 
 
-# Get product by product_id on products/
+# Get product by product_id on product/
 @router.get('/{product_id}')
 async def get_products_by_id_endpoint(product_id: str):
     return get_products_by_id(product_id)
 
 
-# Get all products
+# Get all product
 @router.get('/')
 async def get_all_products_endpoint():
     return get_all_products()
@@ -58,8 +62,8 @@ async def delete_product_endpoint(product_id: str):
 
 
 @router.put('/')
-async def update_product_endpoint(product: Product):
-    pass
+async def update_product_endpoint(product: UpdateProduct):
+    return update_product(product)
 
 
 ## Methods ##
@@ -114,5 +118,22 @@ def delete_product(product_id: str):
     return response
 
 
-def update_product(product: Product):
-    pass
+def update_product(product: UpdateProduct):
+    response = product_table.update_item(
+        Key={
+            'product_id': product.product_id
+        },
+        UpdateExpression='SET #name = :name, category = :category, price = :price, description = :description',
+        ExpressionAttributeValues={
+            ':name': product.name,
+            ':category': product.category,
+            ':price': product.price,
+            ':description': product.description
+        },
+        # name is a reserved keyword in ddb, this is a way around it
+        ExpressionAttributeNames={
+            '#name': 'name'
+        },
+        ReturnValues='UPDATED_NEW',
+    )
+    return response
