@@ -11,7 +11,7 @@ logger.setLevel(logging.INFO)
 dynamodb = boto3.resource('dynamodb')
 order_table = dynamodb.Table(os.getenv('ORDER_TABLE_NAME'))
 
-router = APIRouter('/order', tags=['Order'])
+router = APIRouter(prefix='/order', tags=['Order'])
 
 
 class Order(BaseModel):
