@@ -12,8 +12,8 @@ class OrderService(Construct):
     def handler(self) -> lambda_.PythonFunction:
         return self._handler
 
-    def __int__(self, scope: Construct, id: str, order_table: ddb.ITable, **kwargs):
-        super().__int__(scope, id, **kwargs)
+    def __init__(self, scope: Construct, id: str, order_table: ddb.ITable, **kwargs):
+        super().__init__(scope, id, **kwargs)
         self._handler = lambda_.PythonFunction(
             self,
             'OrderServiceLambda',
