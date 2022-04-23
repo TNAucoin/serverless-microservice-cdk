@@ -16,7 +16,7 @@ logger.setLevel(logging.INFO)
 dynamodb = boto3.resource('dynamodb')
 cart_table = dynamodb.Table(os.getenv('CART_TABLE_NAME'))
 # declare router
-router = APIRouter(prefix='/cart', tags=['Cart'])
+router = APIRouter(prefix='/carts', tags=['Carts'])
 
 
 # create post body models

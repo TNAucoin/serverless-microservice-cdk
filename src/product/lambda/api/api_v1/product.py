@@ -15,7 +15,7 @@ dynamodb = boto3.resource('dynamodb')
 product_table = dynamodb.Table(os.getenv('PRODUCT_TABLE_NAME'))
 
 # Configure router for products api
-router = APIRouter(prefix='/product', tags=['Product'])
+router = APIRouter(prefix='/products', tags=['Products'])
 
 
 class Product(BaseModel):
